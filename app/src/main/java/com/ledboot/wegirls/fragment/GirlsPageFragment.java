@@ -12,10 +12,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.bumptech.glide.Glide;
+import com.ledboot.wegirls.Boot;
 import com.ledboot.wegirls.R;
 import com.ledboot.wegirls.bean.Girl;
+import com.ledboot.wegirls.request.GoJsonRequest;
+import com.ledboot.wegirls.request.GoRequestError;
+import com.ledboot.wegirls.utils.Config;
+import com.ledboot.wegirls.utils.DateStyle;
+import com.ledboot.wegirls.utils.DateUtil;
+import com.ledboot.wegirls.utils.Debuger;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +99,25 @@ public class GirlsPageFragment extends BaseFragment {
 
     private void syncData(){
         swiper.setRefreshing(true);
+        StringBuffer buffer = new StringBuffer("http://route.showapi.com/197-1?");
+        buffer.append("showapi_appid="+Boot.YI_YUAN_APPID);
+        buffer.append("&showapi_sign=" + Boot.YI_YUAN_SECRET);
+        buffer.append("&showapi_timestamp=" + DateUtil.toString(System.currentTimeMillis(), DateStyle.YYYMMddHHmmss));
+        buffer.append("&num=" + 10);
+        buffer.append("&page=" + 1);
+        GoJsonRequest request = new GoJsonRequest(buffer.toString(), Request.Method.GET) {
+            @Override
+            protected void onJsonResponse(JSONObject response) {
+                swiper.setRefreshing(false);
+                Debuger.logD(response.toString());
+            }
+
+            @Override
+            protected void onJsonError(GoRequestError err) {
+                swiper.setRefreshing(false);
+            }
+        };
+        request.perform();
     }
 
 
@@ -108,12 +138,14 @@ public class GirlsPageFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-
+            Girl girl = mList.get(position);
+            Glide.with(mContext).load(girl.getCoverUrl()).into(holder.cover);
+            holder.des.setText(girl.getDes());
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mList.size();
         }
     }
 

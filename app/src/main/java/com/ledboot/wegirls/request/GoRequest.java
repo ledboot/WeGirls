@@ -27,12 +27,20 @@ public abstract class GoRequest {
 	
     private WrapRequest mRequest = null;
     private String mUrl = null;
-    
-	public GoRequest(String url) {
-		this(url,false);
+
+	public GoRequest(String url,int method) {
+		this(url,method,false);
 	}
-    
+
+	public GoRequest(String url) {
+		this(url,Request.Method.POST,false);
+	}
+
 	public GoRequest(String url,boolean needCache) {
+		this(url,Request.Method.POST,needCache);
+	}
+
+	public GoRequest(String url,int method,boolean needCache) {
 		mUrl = url;
 		
 		ErrorListener listener = new ErrorListener(){
@@ -46,7 +54,7 @@ public abstract class GoRequest {
 			
 		};
 		
-		mRequest = new WrapRequest(url,needCache,listener);
+		mRequest = new WrapRequest(url,method,needCache,listener);
 	}
 	
 	public void perform() {
@@ -75,8 +83,8 @@ public abstract class GoRequest {
     
 	class WrapRequest extends Request<String> {
 		
-		public WrapRequest(String url , boolean needCache,ErrorListener listener) {
-			this(Method.POST, url,listener);
+		public WrapRequest(String url ,int method ,boolean needCache,ErrorListener listener) {
+			this(method, url,listener);
 			this.setShouldCache(needCache);
 			// TODO Auto-generated constructor stub
 		}

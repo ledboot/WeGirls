@@ -12,7 +12,9 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * 默使用Method.Post
+ */
 public abstract class GoJsonRequest extends GoRequest{
 	public static final String TAG = "GoJsonRequest";
 	
@@ -21,11 +23,16 @@ public abstract class GoJsonRequest extends GoRequest{
 	private JSONObject mJsonParams = null;
 	
     public GoJsonRequest(String url) {
-		this(url, false);
 		// TODO Auto-generated constructor stub
+		super(url, false);
+	}
+
+	public GoJsonRequest(String url,int method) {
+		// TODO Auto-generated constructor stub
+		super(url, method);
 	}
     
-    public GoJsonRequest(String url, boolean needCache) {
+    public GoJsonRequest(String url,int method ,boolean needCache) {
 		super(url, needCache);
 		// TODO Auto-generated constructor stub
 	}

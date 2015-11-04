@@ -6,7 +6,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +24,20 @@ public class Beauty extends BaseFragment {
 
     String[] tabTitle;
 
+    FragmentManager fm;
+
+    public Beauty(){
+
+    }
+
+    public Beauty(FragmentManager fm){
+        this.fm =fm;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.beauty,container,true);
+        View view = inflater.inflate(R.layout.beauty,container,false);
         initView(view);
         initData();
         setListener();
@@ -42,6 +51,8 @@ public class Beauty extends BaseFragment {
 
     private void initData(){
         tabTitle = getResources().getStringArray(R.array.tab_title);
+        viewPager.setAdapter(new GirlsFragmentPagerAdapter(fm));
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void setListener(){

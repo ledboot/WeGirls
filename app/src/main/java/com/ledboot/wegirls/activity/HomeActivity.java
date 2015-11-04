@@ -6,17 +6,21 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.ledboot.wegirls.R;
+import com.ledboot.wegirls.fragment.Beauty;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -32,6 +36,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
+        initData();
         setListener();
     }
 
@@ -46,6 +51,10 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setupDrawerContent(nvView);
 
+    }
+
+    private void initData(){
+        setTitle(R.string.drawer_menu_weigirls);
     }
 
     private void setListener(){
@@ -70,7 +79,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -99,6 +108,12 @@ public class HomeActivity extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem){
         menuItem.setChecked(true);
         drawerLayout.closeDrawers();
+        setTitle(menuItem.getTitle());
+        if(menuItem.getItemId() == R.id.nav_first_fragment){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame,new Beauty(getSupportFragmentManager()));
+            transaction.commit();
+        }
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
