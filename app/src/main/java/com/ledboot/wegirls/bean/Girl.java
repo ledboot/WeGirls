@@ -9,6 +9,12 @@ public class Girl {
     private String coverUrl;
     private String httpUrl;
 
+    public Girl(String des, String coverUrl, String httpUrl) {
+        this.des = des;
+        this.coverUrl = coverUrl;
+        this.httpUrl = httpUrl;
+    }
+
     public String getDes() {
         return des;
     }

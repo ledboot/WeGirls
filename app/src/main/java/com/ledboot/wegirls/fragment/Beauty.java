@@ -30,10 +30,6 @@ public class Beauty extends BaseFragment {
 
     }
 
-    public Beauty(FragmentManager fm){
-        this.fm =fm;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,6 +47,7 @@ public class Beauty extends BaseFragment {
 
     private void initData(){
         tabTitle = getResources().getStringArray(R.array.tab_title);
+        fm = getActivity().getSupportFragmentManager();
         viewPager.setAdapter(new GirlsFragmentPagerAdapter(fm));
         tabLayout.setupWithViewPager(viewPager);
     }

@@ -31,6 +31,8 @@ public class HomeActivity extends AppCompatActivity {
     NavigationView nvView;
     ActionBarDrawerToggle drawerToggle;
 
+    Fragment currentFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,10 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initData(){
         setTitle(R.string.drawer_menu_weigirls);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        currentFragment = new Beauty();
+        transaction.replace(R.id.content_frame,currentFragment);
+        transaction.commit();
     }
 
     private void setListener(){
@@ -109,11 +115,28 @@ public class HomeActivity extends AppCompatActivity {
         menuItem.setChecked(true);
         drawerLayout.closeDrawers();
         setTitle(menuItem.getTitle());
-        if(menuItem.getItemId() == R.id.nav_first_fragment){
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame,new Beauty(getSupportFragmentManager()));
-            transaction.commit();
+        Fragment fragment = null;
+        Class fragmentClass = null;
+        switch (menuItem.getItemId()){
+            case R.id.nav_first_fragment:
+                fragmentClass = Beauty.class;
+                break;
+            default:
+                fragmentClass = Beauty.class;
+                break;
         }
+        try{
+            fragment = (Fragment)fragmentClass.newInstance();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(fragment.getClass().getName().equals(currentFragment.getClass().getName())){
+            return;
+        }
+        currentFragment = fragment;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame,fragment);
+        transaction.commit();
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
