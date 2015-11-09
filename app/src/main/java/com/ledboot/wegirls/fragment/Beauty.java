@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 
 import com.ledboot.wegirls.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Administrator on 2015/11/3 0003.
  */
@@ -25,6 +28,7 @@ public class Beauty extends BaseFragment {
     String[] tabTitle;
 
     FragmentManager fm;
+    GirlsFragmentPagerAdapter girlsFragmentPagerAdapter;
 
     public Beauty(){
 
@@ -48,7 +52,13 @@ public class Beauty extends BaseFragment {
     private void initData(){
         tabTitle = getResources().getStringArray(R.array.tab_title);
         fm = getActivity().getSupportFragmentManager();
-        viewPager.setAdapter(new GirlsFragmentPagerAdapter(fm));
+        List<Fragment> list = new ArrayList<>();
+        NormalGirlsPageFragment normalGirlsPageFragment = NormalGirlsPageFragment.newInstance();
+        TaoModelPageFragment taoModelPageFragment = TaoModelPageFragment.newInstance();
+        list.add(normalGirlsPageFragment);
+        list.add(taoModelPageFragment);
+        girlsFragmentPagerAdapter = new GirlsFragmentPagerAdapter(fm,list);
+        viewPager.setAdapter(girlsFragmentPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -72,14 +82,16 @@ public class Beauty extends BaseFragment {
     }
 
     class GirlsFragmentPagerAdapter extends FragmentPagerAdapter{
+        private List<Fragment> list;
 
-        public GirlsFragmentPagerAdapter(FragmentManager fm) {
+        public GirlsFragmentPagerAdapter(FragmentManager fm,List<Fragment> list) {
             super(fm);
+            this.list = list;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return GirlsPageFragment.newInstance(position);
+            return list.get(position);
         }
 
         @Override
