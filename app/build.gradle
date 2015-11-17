@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        wegirls_release {
+            keyAlias 'ledboot_wegirls'
+            keyPassword 'wegirls'
+            storeFile file('E:/Gwynn/workspace/key/wegirls_key.jks')
+            storePassword 'wegirls'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
         applicationId "com.ledboot.wegirls"
         minSdkVersion 14
@@ -15,6 +22,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.wegirls_release
         }
     }
 }
