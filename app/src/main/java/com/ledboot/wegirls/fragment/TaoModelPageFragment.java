@@ -227,11 +227,13 @@ public class TaoModelPageFragment extends BaseFragment {
 
         public ViewHolder(View itemView) {
             super(itemView);
+            itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             cover = (ImageView)itemView.findViewById(R.id.cover);
             name = (TextView) itemView.findViewById(R.id.name);
             city = (TextView) itemView.findViewById(R.id.city);
             heightAndWeight = (TextView) itemView.findViewById(R.id.heightAndweight);
             favour = (TextView) itemView.findViewById(R.id.favour);
+
         }
     }
 }

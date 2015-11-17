@@ -154,6 +154,12 @@ public class NormalGirlsPageFragment extends BaseFragment {
 
             @Override
             protected void onJsonError(GoRequestError err) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(mContext,"请求超时",Toast.LENGTH_SHORT).show();
+                    }
+                });
                 if(refresh){
                     swiper.setRefreshing(false);
                 }else{
