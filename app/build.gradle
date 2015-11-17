@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin:'bugly'
 android {
     signingConfigs {
         wegirls_release {
@@ -29,6 +29,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.tencent.bugly:crashreport:1.2.7'
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:design:23.1.0'
@@ -38,4 +39,8 @@ dependencies {
 }
 android {
     useLibrary 'org.apache.http.legacy'
+}
+bugly {
+    appId = '900012201'    //注册时分配的App ID
+    appKey = 'sZ5DI59tUapuXoBp'  //注册时分配的App Key
 }

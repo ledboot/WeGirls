@@ -27,6 +27,7 @@ import com.ledboot.wegirls.utils.Constant;
 import com.ledboot.wegirls.utils.DateStyle;
 import com.ledboot.wegirls.utils.DateUtil;
 import com.ledboot.wegirls.utils.Debuger;
+import com.ledboot.wegirls.widget.recyclerview.InfiniteScrollListener;
 
 import org.json.JSONObject;
 
@@ -46,6 +47,9 @@ public class TaoModelPageFragment extends BaseFragment {
     private static final int PAGE_SIZE =20;
     private TaoRecyclerAdapter recyclerAdapter;
     private List<TaoModel> list;
+    private int currentPage = 1;
+    InfiniteScrollListener infiniteScrollListener;
+    LinearLayoutManager linearLayoutManager;
 
     public static TaoModelPageFragment newInstance(){
         Bundle args = new Bundle();
@@ -74,7 +78,7 @@ public class TaoModelPageFragment extends BaseFragment {
     private void initView(View view){
         swiper = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
         recycler = (RecyclerView) view.findViewById(R.id.recycler);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false);
+        linearLayoutManager = new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false);
         recycler.setLayoutManager(linearLayoutManager);
 
         swiper.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -89,35 +93,52 @@ public class TaoModelPageFragment extends BaseFragment {
     }
 
     private void initData(){
+        infiniteScrollListener = new InfiniteScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore() {
+                ++currentPage;
+                syncData(false);
+            }
+        };
         list = new ArrayList<>();
         recyclerAdapter = new TaoRecyclerAdapter(list);
         recycler.setAdapter(recyclerAdapter);
-        syncData();
+        recycler.addOnScrollListener(infiniteScrollListener);
+        syncData(true);
     }
 
     private void setListener(){
         swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                syncData();
+                currentPage = 1;
+                syncData(true);
             }
         });
     }
 
-    private void syncData(){
-        swiper.setRefreshing(true);
+    private void syncData(final boolean refresh){
+        if(refresh){
+            swiper.setRefreshing(true);
+        }else{
+            infiniteScrollListener.setLoad(true);
+        }
         StringBuffer buffer = new StringBuffer(Constant.TAO_MODEL_URL);
         buffer.append("showapi_appid="+ Boot.YI_YUAN_APPID);
         buffer.append("&showapi_sign=" + Boot.YI_YUAN_SECRET);
         buffer.append("&showapi_timestamp=" + DateUtil.toString(System.currentTimeMillis(), DateStyle.YYYMMddHHmmss));
         buffer.append("&type=");
-        buffer.append("&page=" + 1);
+        buffer.append("&page=" + currentPage);
         GoJsonRequest request = new GoJsonRequest(buffer.toString(), Request.Method.GET) {
             @Override
             protected void onJsonResponse(JSONObject response) {
                 com.alibaba.fastjson.JSONObject object = com.alibaba.fastjson.JSONObject.parseObject(response.toString());
-                swiper.setRefreshing(false);
-                buildData(object);
+                if(refresh){
+                    swiper.setRefreshing(false);
+                }else{
+                    infiniteScrollListener.setLoad(false);
+                }
+                buildData(object,refresh);
             }
 
             @Override
@@ -128,10 +149,13 @@ public class TaoModelPageFragment extends BaseFragment {
         request.perform();
     }
 
-    private void buildData(com.alibaba.fastjson.JSONObject object){
+    private void buildData(com.alibaba.fastjson.JSONObject object,boolean refresh){
         if(0 == object.getIntValue("showapi_res_code") ){
             com.alibaba.fastjson.JSONObject jsonObject = object.getJSONObject("showapi_res_body").getJSONObject("pagebean");
             JSONArray array = jsonObject.getJSONArray("contentlist");
+            if(refresh){
+                list.clear();
+            }
             for(int i =0;i<array.size();i++){
                 com.alibaba.fastjson.JSONObject item = array.getJSONObject(i);
                 String avatarUrl = item.getString("avatarUrl");
@@ -153,7 +177,12 @@ public class TaoModelPageFragment extends BaseFragment {
             }
             recyclerAdapter.notifyDataSetChanged();
         }else{
-            Toast.makeText(mContext, "数据请求出错！", Toast.LENGTH_SHORT).show();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, "数据请求出错！", Toast.LENGTH_SHORT).show();
+                }
+            });
             Debuger.logD(TAG, object.getString("showapi_res_error"));
         }
     }
@@ -178,7 +207,7 @@ public class TaoModelPageFragment extends BaseFragment {
             Glide.with(mContext).load(girl.getAvatarUrl()).into(holder.cover);
             holder.name.setText(girl.getRealName());
             holder.city.setText(girl.getCity());
-            String heightAndWeight = String.format("%s1 cm/%s2 kg",girl.getHeight(),girl.getWeight());
+            String heightAndWeight = String.format("%s cm/%s kg",girl.getHeight(),girl.getWeight());
             holder.heightAndWeight.setText(heightAndWeight);
             holder.favour.setText(girl.getTotalFanNum());
         }
@@ -198,11 +227,13 @@ public class TaoModelPageFragment extends BaseFragment {
 
         public ViewHolder(View itemView) {
             super(itemView);
+            itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             cover = (ImageView)itemView.findViewById(R.id.cover);
             name = (TextView) itemView.findViewById(R.id.name);
             city = (TextView) itemView.findViewById(R.id.city);
             heightAndWeight = (TextView) itemView.findViewById(R.id.heightAndweight);
             favour = (TextView) itemView.findViewById(R.id.favour);
+
         }
     }
 }

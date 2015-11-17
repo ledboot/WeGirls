@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 
 import com.ledboot.wegirls.R;
 import com.ledboot.wegirls.fragment.Beauty;
+import com.tencent.bugly.crashreport.CrashReport;
 
 public class HomeActivity extends AppCompatActivity {
 
