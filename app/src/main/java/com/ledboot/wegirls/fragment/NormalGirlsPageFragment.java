@@ -25,6 +25,7 @@ import com.ledboot.wegirls.utils.Constant;
 import com.ledboot.wegirls.utils.DateStyle;
 import com.ledboot.wegirls.utils.DateUtil;
 import com.ledboot.wegirls.utils.Debuger;
+import com.ledboot.wegirls.widget.recyclerview.InfiniteScrollListener;
 
 import org.json.JSONObject;
 
@@ -53,6 +54,10 @@ public class NormalGirlsPageFragment extends BaseFragment {
     List<Girl> list;
 
     GirlsRecyclerAdapter recyclerAdapter;
+    GridLayoutManager gridLayoutManager;
+    InfiniteScrollListener infiniteScrollListener;
+
+    private int currentPage =1;
 
     public static NormalGirlsPageFragment newInstance(){
         Bundle args = new Bundle();
@@ -80,7 +85,7 @@ public class NormalGirlsPageFragment extends BaseFragment {
         swiper = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
         recycler = (RecyclerView) view.findViewById(R.id.recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext,SPAN_COUNT);
+        gridLayoutManager = new GridLayoutManager(mContext,SPAN_COUNT);
         recycler.setLayoutManager(gridLayoutManager);
 
         swiper.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -96,49 +101,75 @@ public class NormalGirlsPageFragment extends BaseFragment {
     }
 
     private void initData(){
+        infiniteScrollListener = new InfiniteScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore() {
+                ++currentPage;
+                syncData(false);
+            }
+        };
         list = new ArrayList<>();
         recyclerAdapter = new GirlsRecyclerAdapter(list);
         recycler.setAdapter(recyclerAdapter);
-        syncData();
+
+        recycler.addOnScrollListener(infiniteScrollListener);
+        syncData(true);
     }
+
 
 
     private void setListener(){
         swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                syncData();
+                currentPage = 1;
+                syncData(true);
             }
         });
     }
 
-    private void syncData(){
-        swiper.setRefreshing(true);
+    private void syncData(final boolean refresh){
+        if(refresh){
+            swiper.setRefreshing(true);
+        }else{
+            infiniteScrollListener.setLoad(true);
+        }
         StringBuffer buffer = new StringBuffer(Constant.NORMAL_GIRL_URL);
         buffer.append("showapi_appid="+Boot.YI_YUAN_APPID);
         buffer.append("&showapi_sign=" + Boot.YI_YUAN_SECRET);
         buffer.append("&showapi_timestamp=" + DateUtil.toString(System.currentTimeMillis(), DateStyle.YYYMMddHHmmss));
         buffer.append("&num=" + SEX_GIRLS_PAGESIZE);
-        buffer.append("&page=" + 1);
+        buffer.append("&page=" + currentPage);
         GoJsonRequest request = new GoJsonRequest(buffer.toString(), Request.Method.GET) {
             @Override
             protected void onJsonResponse(JSONObject response) {
                 com.alibaba.fastjson.JSONObject object = com.alibaba.fastjson.JSONObject.parseObject(response.toString());
-                swiper.setRefreshing(false);
-                buildData(object);
+                if(refresh){
+                    swiper.setRefreshing(false);
+                }else{
+                    infiniteScrollListener.setLoad(false);
+                }
+                buildData(object,refresh);
             }
 
             @Override
             protected void onJsonError(GoRequestError err) {
-                swiper.setRefreshing(false);
+                if(refresh){
+                    swiper.setRefreshing(false);
+                }else{
+                    infiniteScrollListener.setLoad(false);
+                }
             }
         };
         request.perform();
     }
 
-    private void buildData(com.alibaba.fastjson.JSONObject object){
+    private void buildData(com.alibaba.fastjson.JSONObject object,boolean refresh){
         if(0 == object.getIntValue("showapi_res_code") ){
             com.alibaba.fastjson.JSONObject jsonObject = object.getJSONObject("showapi_res_body");
+            if(refresh){
+                list.clear();
+            }
             for(int i =0;i<SEX_GIRLS_PAGESIZE-2;i++){
                 com.alibaba.fastjson.JSONObject one = jsonObject.getJSONObject(String.valueOf(i));
                 Girl girl = new Girl(one.getString("description"),one.getString("picUrl"),one.getString("url"));
@@ -146,7 +177,12 @@ public class NormalGirlsPageFragment extends BaseFragment {
             }
             recyclerAdapter.notifyDataSetChanged();
         }else{
-            Toast.makeText(mContext,"数据请求出错！",Toast.LENGTH_SHORT).show();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext,"数据请求出错！",Toast.LENGTH_SHORT).show();
+                }
+            });
             Debuger.logD(TAG,object.getString("showapi_res_error"));
         }
     }

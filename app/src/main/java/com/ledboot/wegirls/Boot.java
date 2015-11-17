@@ -2,6 +2,8 @@ package com.ledboot.wegirls;
 
 import android.app.Application;
 
+import com.tencent.bugly.crashreport.CrashReport;
+
 /**
  * Created by Administrator on 2015/11/3 0003.
  */
@@ -15,6 +17,7 @@ public class Boot extends Application {
     public void onCreate() {
         super.onCreate();
         app = this;
+//        CrashReport.initCrashReport(app, "900012201", false);
     }
 
     public static Boot getInstance(){
