@@ -1,5 +1,6 @@
 package com.ledboot.wegirls.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ public class TaoModel {
     private String city;
     private String height;
     private String weight;
-    private List<String> imgList;
+    private ArrayList<String> imgList;
     private String realName;
     private String userId;
     private String link;
@@ -63,11 +64,11 @@ public class TaoModel {
         this.weight = weight;
     }
 
-    public List<String> getImgList() {
+    public ArrayList<String> getImgList() {
         return imgList;
     }
 
-    public void setImgList(List<String> imgList) {
+    public void setImgList(ArrayList<String> imgList) {
         this.imgList = imgList;
     }
 

@@ -18,6 +18,7 @@ import com.android.volley.Request;
 import com.bumptech.glide.Glide;
 import com.ledboot.wegirls.Boot;
 import com.ledboot.wegirls.R;
+import com.ledboot.wegirls.widget.recyclerview.RecyclerOnItemClickListener;
 import com.ledboot.wegirls.bean.Girl;
 import com.ledboot.wegirls.request.GoJsonRequest;
 import com.ledboot.wegirls.request.GoRequestError;
@@ -195,7 +196,7 @@ public class NormalGirlsPageFragment extends BaseFragment {
 
 
 
-    class GirlsRecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
+    class GirlsRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> implements RecyclerOnItemClickListener{
 
         List<Girl> mList;
 
@@ -206,7 +207,7 @@ public class NormalGirlsPageFragment extends BaseFragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.girls_item,null);
-            return new ViewHolder(view);
+            return new ViewHolder(view,this);
         }
 
         @Override
@@ -220,16 +221,29 @@ public class NormalGirlsPageFragment extends BaseFragment {
         public int getItemCount() {
             return mList.size();
         }
+
+        @Override
+        public void onItemClick(View view, int position) {
+            Toast.makeText(mContext,"position="+position,Toast.LENGTH_SHORT).show();
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
         ImageView cover;
         TextView des;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView, final RecyclerOnItemClickListener clickListener) {
             super(itemView);
             cover = (ImageView)itemView.findViewById(R.id.cover);
             des = (TextView) itemView.findViewById(R.id.des);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(clickListener != null){
+                        clickListener.onItemClick(itemView,getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.ledboot.wegirls.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -43,7 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         setListener();
     }
 
-    private void initView(){
+    private void initView() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -56,15 +57,15 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void initData(){
+    private void initData() {
         setTitle(R.string.drawer_menu_weigirls);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         currentFragment = new Beauty();
-        transaction.replace(R.id.content_frame,currentFragment);
+        transaction.replace(R.id.content_frame, currentFragment);
         transaction.commit();
     }
 
-    private void setListener(){
+    private void setListener() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,7 +103,7 @@ public class HomeActivity extends AppCompatActivity {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void setupDrawerContent(NavigationView navigationView){
+    private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -112,13 +113,13 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void selectDrawerItem(MenuItem menuItem){
+    public void selectDrawerItem(MenuItem menuItem) {
         menuItem.setChecked(true);
         drawerLayout.closeDrawers();
         setTitle(menuItem.getTitle());
         Fragment fragment = null;
         Class fragmentClass = null;
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.nav_first_fragment:
                 fragmentClass = Beauty.class;
                 break;
@@ -126,21 +127,21 @@ public class HomeActivity extends AppCompatActivity {
                 fragmentClass = Beauty.class;
                 break;
         }
-        try{
-            fragment = (Fragment)fragmentClass.newInstance();
-        }catch (Exception e){
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        if(fragment.getClass().getName().equals(currentFragment.getClass().getName())){
+        if (fragment.getClass().getName().equals(currentFragment.getClass().getName())) {
             return;
         }
         currentFragment = fragment;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_frame,fragment);
+        transaction.replace(R.id.content_frame, fragment);
         transaction.commit();
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
     }
 }

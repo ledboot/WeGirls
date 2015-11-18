@@ -1,5 +1,6 @@
 package com.ledboot.wegirls.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +20,7 @@ import com.android.volley.Request;
 import com.bumptech.glide.Glide;
 import com.ledboot.wegirls.Boot;
 import com.ledboot.wegirls.R;
+import com.ledboot.wegirls.activity.ModelGalleryActivity;
 import com.ledboot.wegirls.bean.Girl;
 import com.ledboot.wegirls.bean.TaoModel;
 import com.ledboot.wegirls.request.GoJsonRequest;
@@ -28,6 +30,7 @@ import com.ledboot.wegirls.utils.DateStyle;
 import com.ledboot.wegirls.utils.DateUtil;
 import com.ledboot.wegirls.utils.Debuger;
 import com.ledboot.wegirls.widget.recyclerview.InfiniteScrollListener;
+import com.ledboot.wegirls.widget.recyclerview.RecyclerOnItemClickListener;
 
 import org.json.JSONObject;
 
@@ -38,7 +41,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2015/11/9.
  */
-public class TaoModelPageFragment extends BaseFragment {
+public class TaoModelPageFragment extends BaseFragment{
 
     public static String TAG = TaoModelPageFragment.class.getSimpleName();
 
@@ -60,7 +63,7 @@ public class TaoModelPageFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Debuger.logD(TAG,"onCreate()");
+        Debuger.logD(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
     }
 
@@ -163,7 +166,7 @@ public class TaoModelPageFragment extends BaseFragment {
                 String height = item.getString("height");
                 String weight= item.getString("weight");
                 JSONArray imgArr = item.getJSONArray("imgList");
-                List<String> imgList = new ArrayList<>();
+                ArrayList<String> imgList = new ArrayList<>();
                 for(Object o : imgArr){
                     imgList.add(o.toString());
                 }
@@ -187,7 +190,8 @@ public class TaoModelPageFragment extends BaseFragment {
         }
     }
 
-    class TaoRecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
+
+    class TaoRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> implements RecyclerOnItemClickListener{
 
         List<TaoModel> mList;
 
@@ -198,7 +202,7 @@ public class TaoModelPageFragment extends BaseFragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.tao_girls_item,null);
-            return new ViewHolder(view);
+            return new ViewHolder(view,this);
         }
 
         @Override
@@ -216,6 +220,14 @@ public class TaoModelPageFragment extends BaseFragment {
         public int getItemCount() {
             return mList.size();
         }
+
+        @Override
+        public void onItemClick(View view, int position) {
+            TaoModel girl = mList.get(position);
+            Intent intent = new Intent(getContext(), ModelGalleryActivity.class);
+            intent.putStringArrayListExtra("picList",girl.getImgList());
+            getContext().startActivity(intent);
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -225,7 +237,7 @@ public class TaoModelPageFragment extends BaseFragment {
         TextView heightAndWeight;
         TextView favour;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView, final RecyclerOnItemClickListener clickListener) {
             super(itemView);
             itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             cover = (ImageView)itemView.findViewById(R.id.cover);
@@ -233,7 +245,14 @@ public class TaoModelPageFragment extends BaseFragment {
             city = (TextView) itemView.findViewById(R.id.city);
             heightAndWeight = (TextView) itemView.findViewById(R.id.heightAndweight);
             favour = (TextView) itemView.findViewById(R.id.favour);
-
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(clickListener != null){
+                        clickListener.onItemClick(itemView,getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 }
