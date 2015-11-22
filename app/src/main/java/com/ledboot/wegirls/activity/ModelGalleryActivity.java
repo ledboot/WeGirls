@@ -22,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2015/11/18.
  */
-public class ModelGalleryActivity extends AppCompatActivity implements SwipeableLayout.OnLayoutCloseListener{
+public class ModelGalleryActivity extends BaseActivity implements SwipeableLayout.OnLayoutCloseListener{
 
 
     SwipeableLayout swipeableLayout;

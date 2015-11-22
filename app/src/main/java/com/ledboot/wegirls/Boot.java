@@ -24,5 +24,8 @@ public class Boot extends Application {
         return app;
     }
 
-
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+    }
 }

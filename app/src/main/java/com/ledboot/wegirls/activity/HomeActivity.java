@@ -1,30 +1,28 @@
 package com.ledboot.wegirls.activity;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ledboot.wegirls.R;
 import com.ledboot.wegirls.fragment.Beauty;
-import com.tencent.bugly.crashreport.CrashReport;
+import com.ledboot.wegirls.utils.UiHelper;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
     DrawerLayout drawerLayout;
     Toolbar toolbar;
@@ -34,6 +32,10 @@ public class HomeActivity extends AppCompatActivity {
     ActionBarDrawerToggle drawerToggle;
 
     Fragment currentFragment;
+    View navHeader;
+
+    ImageView userIcon;
+    TextView userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,12 @@ public class HomeActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         contentFrame = (FrameLayout) findViewById(R.id.content_frame);
         nvView = (NavigationView) findViewById(R.id.nvView);
+
+        navHeader = nvView.inflateHeaderView(R.layout.nav_header);
+
+        navHeader.setClickable(true);
+        userIcon = (ImageView) navHeader.findViewById(R.id.user_icon);
+        userName = (TextView) navHeader.findViewById(R.id.user_name);
 
         drawerToggle = setupDrawerToggle();
         setSupportActionBar(toolbar);
@@ -71,6 +79,13 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        navHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UiHelper.showLogin(mContext,AccountActivity.EXTRA_LOGIN);
             }
         });
 

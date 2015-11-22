@@ -36,6 +36,13 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.alibaba:fastjson:1.2.7'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    //avoscloud-sdk 为 LeanCloud基础包
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.11.1'
+
+    //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
+    compile 'cn.leancloud.android:avoscloud-push:v3.+@aar'
+    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
 }
 android {
     useLibrary 'org.apache.http.legacy'

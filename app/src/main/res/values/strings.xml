@@ -7,4 +7,9 @@
     <string name="setting">设置</string>
 
     <string name="drawer_menu_weigirls">微女</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+
+    <string name="account">帐号</string>
+    <string name="password">密码</string>
 </resources>
