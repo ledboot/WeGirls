@@ -19,10 +19,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ledboot.wegirls.R;
+import com.ledboot.wegirls.event.LoginEvent;
 import com.ledboot.wegirls.fragment.Beauty;
+import com.ledboot.wegirls.utils.Debuger;
 import com.ledboot.wegirls.utils.UiHelper;
 
+import de.greenrobot.event.EventBus;
+
 public class HomeActivity extends BaseActivity {
+
+    public static String TAG = HomeActivity.class.getSimpleName();
 
     DrawerLayout drawerLayout;
     Toolbar toolbar;
@@ -85,11 +91,25 @@ public class HomeActivity extends BaseActivity {
         navHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UiHelper.showLogin(mContext,AccountActivity.EXTRA_LOGIN);
+                drawerLayout.closeDrawers();
+                UiHelper.showLogin(mContext, AccountActivity.EXTRA_LOGIN);
             }
         });
 
         drawerLayout.setDrawerListener(drawerToggle);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    public void onEventMainThread(LoginEvent event) {
+        Debuger.logD(TAG,"来数据了");
+        userName.setText(event.getUser().getUsername());
     }
 
     @Override

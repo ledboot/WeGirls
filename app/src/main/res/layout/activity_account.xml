@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ledboot.wegirls.widget.SwipeableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/frame"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"></LinearLayout>
-
-</com.ledboot.wegirls.widget.SwipeableLayout>
+</FrameLayout>

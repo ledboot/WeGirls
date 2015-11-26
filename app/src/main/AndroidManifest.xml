@@ -65,7 +65,6 @@
         <activity
             android:name=".activity.AccountActivity"
             android:theme="@style/Wegirls.NoActionBar"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait">
 
         </activity>

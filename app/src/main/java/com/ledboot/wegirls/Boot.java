@@ -2,6 +2,8 @@ package com.ledboot.wegirls;
 
 import android.app.Application;
 
+import com.avos.avoscloud.AVOSCloud;
+import com.ledboot.wegirls.utils.EUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 
 /**
@@ -17,6 +19,8 @@ public class Boot extends Application {
     public void onCreate() {
         super.onCreate();
         app = this;
+        AVOSCloud.initialize(this, "oEvGj5jKwC80WRnMEUa3bFce", "ewoPCxAgoIcrhb7zE9zO3zPK");
+        EUtils.initialize(app);
 //        CrashReport.initCrashReport(app, "900012201", false);
     }
 
