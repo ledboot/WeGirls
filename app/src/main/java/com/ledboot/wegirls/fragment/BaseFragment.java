@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +36,13 @@ public class BaseFragment extends Fragment {
         mContext = context;
     }
 
-    public void repace(int containerViewId,Fragment fragment){
-        FragmentTransaction transaction =((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction();
-        transaction.replace(containerViewId,fragment).commit();
+    public void repace(int containerViewId, Fragment fragment) {
+        FragmentTransaction transaction = ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction();
+        transaction.replace(containerViewId, fragment).commit();
     }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return false;
+    }
+
 }

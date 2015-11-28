@@ -10,6 +10,11 @@
     <string name="login">登录</string>
     <string name="register">注册</string>
 
-    <string name="account">帐号</string>
+    <string name="login_account">手机/邮箱/用户名</string>
+    <string name="email">邮箱</string>
     <string name="password">密码</string>
+    <string name="phone">手机号码</string>
+    <string name="smscode">短信验证码</string>
+    <string name="send_smscode">发送验证码</string>
+
 </resources>

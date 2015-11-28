@@ -6,43 +6,82 @@
     android:gravity="center"
     android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/account"
+    <EditText
+        android:id="@+id/phone_num"
         android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:drawableLeft="@mipmap/ic_account"
         android:drawablePadding="5dp"
         android:gravity="center|start"
-        android:hint="@string/account"
-        android:text="dfasfsd"
+        android:hint="@string/phone"
+        android:inputType="number"
+        android:maxLength="11"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:singleLine="true"
+        android:textColorHint="@android:color/white"
         android:textSize="20sp" />
 
-    <TextView
+    <EditText
         android:id="@+id/password"
         android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:drawableLeft="@mipmap/ic_password"
         android:drawablePadding="5dp"
         android:gravity="center|start"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:text="dfasfsd"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:singleLine="true"
+        android:textColorHint="@android:color/white"
         android:textSize="20sp" />
 
-    <Button
+
+    <LinearLayout
         android:layout_width="300dp"
-        android:text="@string/register"
-        android:id="@+id/login_btn"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/smscode"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:hint="@string/smscode"
+            android:paddingTop="20dp"
+            android:singleLine="true"
+            android:textColorHint="@android:color/white"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/send_smscode"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/send_smscode" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/regist_btn"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@color/colorAccent" />
+        android:background="@color/colorAccent"
+        android:text="@string/register" />
 
     <TextView
         android:id="@+id/tv_login"
-        android:text="@string/login"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/login" />
 
 </LinearLayout>
